@@ -1,0 +1,69 @@
+{
+	"app-id": "com.whatsapp.dekstop",
+	"base": "io.atom.electron.BaseApp",
+	"base-version": "18.08",
+	"runtime": "org.freedesktop.Platform",
+	"runtime-version": "18.08",
+	"sdk": "org.freedesktop.Sdk",
+	"command": "whatsapp",
+	"tags": [
+		"proprietary"
+	],
+	"finish-args": [
+		"--socket=x11",
+		"--share=ipc",
+		"--share=network",
+		"--device=dri",
+		"--filesystem=home"
+	],
+	"modules": [
+		{
+			"name": "whatsapp",
+			"buildsystem": "simple",
+			"build-commands": [
+				"install -Dt /app/bin apply_extra whatsapp",
+				"install -Dm644 -t /app/usr/share/metainfo com.whatsapp.desktop.appdata.xml",
+				"install -Dm644 -t /app/usr/share/applications com.whatsapp.desktop.desktop",
+				"install -Dm644 -t /app/usr/share/icons/hicolor/512x512/apps com.whatsapp.desktop.png"
+			],
+			"sources": [
+				{
+					"type": "script",
+					"dest-filename": "apply_extra",
+					"commands": [
+						"./*.AppImage --appimage-extract",
+						"rm *.zip *.AppImage *.html",
+						"mv squashfs-root whatsapp",
+						"chmod -R 755 whatsapp"
+					]
+				},
+				{
+					"type": "script",
+					"dest-filename": "whatsapp",
+					"commands": [
+						"exec /app/extra/whatsapp/whatsapp \"$@\""
+					]
+				},
+				{
+					"type": "file",
+					"path": "com.whatsapp.desktop.desktop"
+				},
+				{
+					"type": "file",
+					"path": "com.whatsapp.desktop.png"
+				},
+				{
+					"type": "file",
+					"path": "com.whatsapp.desktop.appdata.xml"
+				},
+				{
+					"type": "extra-data",
+					"filename": "WhatsApp-1.0.0-x86_64.AppImage",
+					"url": "https://mjnielsen.org/files/WhatsApp-1.0.0-x86_64.AppImage",
+					"sha256": "feaf34f1b5e4cbcd3a6928967a267a61fc1a58bcec68da5d76234a149e087411",
+					"size": 49603980
+				}
+			]
+		}
+	]
+}
